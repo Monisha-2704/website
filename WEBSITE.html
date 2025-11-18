@@ -1,0 +1,263 @@
+    <!doctype html>
+    <html lang="en">
+    <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Responsive Demo — Mobile First</title>
+
+    <style>
+        /* ===== Base / mobile-first ===== */
+        :root{
+        --gap: 1rem;
+        --container-max: 1100px;
+        --brand: #0b5cff;
+        --muted: #666;
+        --radius: 10px;
+        font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+        font-size: 16px; /* 1rem = 16px by default; change to scale base */
+        }
+
+        /* Simple CSS reset-ish */
+        *,*::before,*::after{box-sizing:border-box}
+        html,body{height:100%}
+        body{
+        margin:0;
+        line-height:1.4;
+        color:#111;
+        background: #f7f8fb;
+        -webkit-font-smoothing:antialiased;
+        -moz-osx-font-smoothing:grayscale;
+        padding: calc(var(--gap) * 0.5);
+        }
+
+        /* Container */
+        .container{
+        width:100%;
+        max-width: var(--container-max);
+        margin: 0 auto;
+        padding: 0 calc(var(--gap) * 0.5);
+        }
+
+        /* Header & nav - mobile first (hamburger) */
+        header{
+        background: white;
+        border-radius: var(--radius);
+        padding: 0.75rem;
+        box-shadow: 0 1px 6px rgba(12,14,20,0.06);
+        margin-bottom: var(--gap);
+        display:flex;
+        align-items:center;
+        gap:0.75rem;
+        }
+        .brand{
+        display:flex;
+        align-items:center;
+        gap:0.5rem;
+        text-decoration:none;
+        color:var(--brand);
+        font-weight:600;
+        font-size:1.05rem;
+        }
+        /* hamburger — checkbox hack */
+        .nav-toggle{
+        margin-left:auto;
+        display:flex;
+        align-items:center;
+        }
+        .nav-toggle input{ display:none; }
+        .hamburger{
+        width:40px;height:40px;display:inline-grid;place-items:center;border-radius:8px;
+        cursor:pointer;
+        }
+        .hamburger span{
+        display:block;width:20px;height:2px;background:#222;border-radius:2px;position:relative;
+        }
+        .hamburger span::before, .hamburger span::after{
+        content:"";position:absolute;left:0;width:20px;height:2px;background:#222;border-radius:2px;
+        }
+        .hamburger span::before{ top:-6px; }
+        .hamburger span::after{ top:6px; }
+
+        /* mobile nav: hidden by default, appears when checked */
+        nav.mobile-nav{
+        width:100%;
+        margin-top:0.5rem;
+        display:none;
+        gap:0.5rem;
+        flex-direction:column;
+        }
+        .nav-toggle input:checked ~ nav.mobile-nav{ display:flex; }
+
+        nav.mobile-nav a{
+        text-decoration:none;
+        padding:0.6rem 0.75rem;
+        border-radius:8px;
+        color:#111;
+        background:transparent;
+        display:block;
+        }
+        nav.mobile-nav a:hover{ background:#f1f3f8; }
+
+        main{
+        display:block;
+        gap:var(--gap);
+        }
+
+        .hero{
+        background: linear-gradient(180deg,#ffffff, #fbfdff);
+        padding:1rem;
+        border-radius:var(--radius);
+        box-shadow: 0 1px 6px rgba(12,14,20,0.04);
+        }
+        .hero h1{ margin:0 0 0.5rem 0; font-size:1.35rem; line-height:1.15; }
+        .hero p{ margin:0; color:var(--muted); }
+
+        /* Responsive grid — stacks on mobile */
+        .grid{
+        display:block;
+        margin-top: var(--gap);
+        }
+        .card{
+        background:white;
+        border-radius:10px;
+        padding:0.85rem;
+        margin-bottom:var(--gap);
+        box-shadow: 0 1px 5px rgba(12,14,20,0.04);
+        }
+        .card img{
+        width:100%;
+        height:auto;
+        border-radius:8px;
+        display:block;
+        margin-bottom:0.6rem;
+        }
+        .card h3{ margin:0 0 0.25rem 0; font-size:1.05rem;}
+        .card p{ margin:0; color:var(--muted); font-size:0.95rem; }
+
+        /* Footer */
+        footer{
+        margin-top:var(--gap);
+        text-align:center;
+        color:var(--muted);
+        font-size:0.9rem;
+        }
+
+        /* ===== Media queries (tablet / desktop) ===== */
+        /* Tablet and above — show horizontal nav and two-column grid */
+        @media (min-width: 700px){
+        header{ padding:1rem; }
+        .brand{ font-size:1.25rem; }
+        .nav-toggle{ margin-left:1rem; }
+        /* show horizontal nav, hide checkbox menu */
+        .nav-toggle input{ display:none !important; }
+        nav.mobile-nav{ display:flex !important; flex-direction:row; gap:0.5rem; margin-top:0; }
+        .hamburger{ display:none; }
+
+        .grid{
+            display:grid;
+            grid-template-columns: repeat(2, minmax(0,1fr));
+            gap:var(--gap);
+        }
+        .card{ margin-bottom:0; }
+        }
+
+        /* Desktop - wider container and 3-column grid */
+        @media (min-width: 1000px){
+        :root{ --container-max: 1300px; }
+        .container{ padding:0 1rem; }
+        .hero{ display:flex; gap:1rem; align-items:center; padding:1.25rem; }
+        .hero .hero-text{ flex:1; }
+        .hero .hero-action{ min-width:220px; }
+        .hero h1{ font-size:1.6rem; }
+        .grid{ grid-template-columns: repeat(3, minmax(0,1fr)); }
+        }
+
+        /* Fluid typography tweak using clamp */
+        h1{ font-size: clamp(1.35rem, 2.6vw, 1.6rem); }
+        h3{ font-size: clamp(1rem, 2.2vw, 1.1rem); }
+
+        /* Accessibility: focus styles */
+        a:focus, button:focus, input:focus{
+        outline:3px solid rgba(11,92,255,0.18);
+        outline-offset:2px;
+        }
+    </style>
+    </head>
+    <body>
+    <div class="container">
+
+        <header>
+        <a class="brand" href="#">
+            <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="10" fill="#0b5cff"/>
+            </svg>
+            MySite
+        </a>
+
+        <div class="nav-toggle" aria-hidden="false">
+            <!-- checkbox toggles the mobile menu -->
+            <label class="hamburger" for="nav-check" aria-hidden="true" title="Toggle menu">
+            <span aria-hidden="true"></span>
+            </label>
+            <input id="nav-check" type="checkbox" aria-label="Toggle navigation menu" />
+            <nav class="mobile-nav" role="navigation" aria-label="Main navigation">
+            <a href="#features">Features</a>
+            <a href="#gallery">Gallery</a>
+            <a href="#contact">Contact</a>
+            </nav>
+        </div>
+        </header>
+
+        <main>
+        <section class="hero" aria-labelledby="hero-title">
+            <div class="hero-text">
+            <h1 id="hero-title">Make your site look great on phones, tablets, and desktops.</h1>
+            <p>Mobile-first design with fluid layout, accessible controls, and simple breakpoints to keep things tidy.</p>
+            </div>
+            <div class="hero-action">
+            <button style="appearance:none;border:0;padding:0.6rem 0.9rem;border-radius:8px;background:var(--brand);color:white;font-weight:600;cursor:pointer;min-width:140px;">
+                Get Started
+            </button>
+            </div>
+        </section>
+
+        <section id="features" class="grid" aria-label="Features">
+            <article class="card">
+            <img src="https://via.placeholder.com/800x450" alt="Sample responsive image">
+            <h3>Responsive images</h3>
+            <p>Images scale to fit the container so they never overflow on small screens.</p>
+            </article>
+
+            <article class="card">
+            <img src="https://via.placeholder.com/800x450" alt="Sample responsive image">
+            <h3>Fluid layout</h3>
+            <p>The grid moves from one column on mobile → two on tablet → three on desktop.</p>
+            </article>
+
+            <article class="card">
+            <img src="https://via.placeholder.com/800x450" alt="Sample responsive image">
+            <h3>Accessible nav</h3>
+            <p>Keyboard-focusable and clear focus outlines help users that rely on keyboard navigation.</p>
+            </article>
+        </section>
+
+        </main>
+
+        <footer id="contact">
+        <p>© <span id="year"></span> MySite — Built mobile-first</p>
+        </footer>
+    </div>
+
+    <script>
+        // small JS to update year (keeps file static-friendly)
+        document.getElementById('year').textContent = new Date().getFullYear();
+        // close mobile menu on link click (nice UX)
+        document.querySelectorAll('nav.mobile-nav a').forEach(a=>{
+        a.addEventListener('click', ()=> {
+            const cb = document.getElementById('nav-check');
+            if(cb && cb.checked) cb.checked = false;
+        });
+        });
+    </script>
+    </body>
+    </html>
